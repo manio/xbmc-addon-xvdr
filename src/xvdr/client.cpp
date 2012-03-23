@@ -279,14 +279,14 @@ PVR_ERROR DialogChannelScan(void)
 /*******************************************/
 /** PVR EPG Functions                     **/
 
-PVR_ERROR GetEPGForChannel(PVR_HANDLE handle, const PVR_CHANNEL &channel, time_t iStart, time_t iEnd)
+PVR_ERROR GetEPGForChannel(PVR_HANDLE handle, const PVR_CHANNEL &channel, time_t iStart, time_t iEnd, time_t iSince)
 {
   cMutexLock lock(&XVDRMutex);
 
   if (!XVDRData)
     return PVR_ERROR_SERVER_ERROR;
 
-  return (XVDRData->GetEPGForChannel(handle, channel, iStart, iEnd) ? PVR_ERROR_NO_ERROR: PVR_ERROR_SERVER_ERROR);
+  return (XVDRData->GetEPGForChannel(handle, channel, iStart, iEnd, iSince) ? PVR_ERROR_NO_ERROR: PVR_ERROR_SERVER_ERROR);
 }
 
 

@@ -339,7 +339,7 @@ bool cXVDRData::GetChannelsList(PVR_HANDLE handle, bool radio)
   return true;
 }
 
-bool cXVDRData::GetEPGForChannel(PVR_HANDLE handle, const PVR_CHANNEL &channel, time_t start, time_t end)
+bool cXVDRData::GetEPGForChannel(PVR_HANDLE handle, const PVR_CHANNEL &channel, time_t start, time_t end, time_t since)
 {
   cRequestPacket vrp;
   if (!vrp.init(XVDR_EPG_GETFORCHANNEL))
@@ -347,7 +347,7 @@ bool cXVDRData::GetEPGForChannel(PVR_HANDLE handle, const PVR_CHANNEL &channel, 
     XBMC->Log(LOG_ERROR, "%s - Can't init cRequestPacket", __FUNCTION__);
     return false;
   }
-  if (!vrp.add_U32(channel.iUniqueId) || !vrp.add_U32(start) || !vrp.add_U32(end - start))
+  if (!vrp.add_U32(channel.iUniqueId) || !vrp.add_U32(start) || !vrp.add_U32(end - start) || !vrp.add_U32(since))
   {
     XBMC->Log(LOG_ERROR, "%s - Can't add parameter to cRequestPacket", __FUNCTION__);
     return false;
@@ -368,6 +368,7 @@ bool cXVDRData::GetEPGForChannel(PVR_HANDLE handle, const PVR_CHANNEL &channel, 
       memset(&tag, 0 , sizeof(tag));
 
       tag.iChannelNumber      = channel.iChannelNumber;
+      tag.iClientChannelUid   = vresp->extract_U32();
       tag.iUniqueBroadcastId  = vresp->extract_U32();
       tag.startTime           = vresp->extract_U32();
       tag.endTime             = tag.startTime + vresp->extract_U32();
